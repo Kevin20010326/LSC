@@ -9,8 +9,8 @@ class LeafSegmentationCNN(nn.Module):
         self.conv2 = nn.Conv2d(16, 32, 3, padding=1)
         self.conv3 = nn.Conv2d(32, 64, 3, padding=1)
         # 定義全連接層
-        self.fc1 = nn.Linear(64 * 64 * 3, 512)
-        self.fc2 = nn.Linear(512, 2)  # 輸出 2 類：前景和背景
+        self.fc1 = nn.Linear(64 * 16 * 16, 512)  # 將特徵圖展平後的大小為 64x16x16
+        self.fc2 = nn.Linear(512, 8)  # 輸出 2 類：前景和背景
 
     def forward(self, x):
         # 向前傳遞
@@ -20,8 +20,7 @@ class LeafSegmentationCNN(nn.Module):
         x = F.max_pool2d(x, 2)
         x = F.relu(self.conv3(x))
         x = F.max_pool2d(x, 2)
-        x = x.view(-1, 64 * 64 * 3)  # 將特徵圖展平
+        x = x.view(-1, 64 * 16 * 16)  # 將特徵圖展平
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
         return x
-

@@ -8,13 +8,15 @@ from data_preprocessing import LeafSegmentationCNN
 
 # 定義數據轉換
 transform = transforms.Compose([
-    transforms.Resize((64, 64)),  # 調整大小為 64x64
-    transforms.ToTensor()  # 轉換為 PyTorch 張量
+    transforms.Resize((64, 64)),  # 將圖像調整為 64x64
+    transforms.ToTensor(),         # 將圖像轉換為 PyTorch 張量
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))  # 正規化到[-1, 1]範圍內
 ])
+
 
 # 加載數據集
 dataset = ImageFolder(root="/Users/wenqingwei/Desktop/LSC/A1_test", transform=transform)
-train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
+train_loader = DataLoader(dataset, batch_size=8, shuffle=True)
 
 # 初始化模型
 model = LeafSegmentationCNN()
