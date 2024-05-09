@@ -9,7 +9,7 @@ class LeafSegmentationCNN(nn.Module):
         self.conv2 = nn.Conv2d(16, 32, 3, padding=1)
         self.conv3 = nn.Conv2d(32, 64, 3, padding=1)
         # 定義全連接層
-        self.fc1 = nn.Linear(64 * 64 * 64, 512)
+        self.fc1 = nn.Linear(64 * 64 * 3, 512)
         self.fc2 = nn.Linear(512, 2)  # 輸出 2 類：前景和背景
 
     def forward(self, x):
@@ -25,4 +25,3 @@ class LeafSegmentationCNN(nn.Module):
         x = self.fc2(x)
         return x
 
-# 接下來，將你之前的程式碼添加在這之後

@@ -1,5 +1,6 @@
 import torch
-import torchvision.transforms as transforms # type: ignore
+import torch.nn as nn
+import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision.datasets import ImageFolder
 
@@ -12,7 +13,7 @@ transform = transforms.Compose([
 ])
 
 # 加載數據集
-dataset = ImageFolder(root="/Users/wenqingwei/Desktop/LSC/A1", transform=transform)
+dataset = ImageFolder(root="/Users/wenqingwei/Desktop/LSC/A1_test", transform=transform)
 train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
 
 # 初始化模型
