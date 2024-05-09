@@ -20,7 +20,7 @@ class LeafSegmentationCNN(nn.Module):
         x = F.max_pool2d(x, 2)
         x = F.relu(self.conv3(x))
         x = F.max_pool2d(x, 2)
-        x = x.view(-1, 64 * 64 * 64)  # 將特徵圖展平
+        x = x.view(-1, 64 * 64 * 3)  # 將特徵圖展平
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
         return x
