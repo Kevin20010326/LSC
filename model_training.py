@@ -1,6 +1,9 @@
+import torch
 import torchvision.transforms as transforms # type: ignore
 from torch.utils.data import DataLoader
 from torchvision.datasets import ImageFolder
+
+from data_preprocessing import LeafSegmentationCNN
 
 # 定義數據轉換
 transform = transforms.Compose([
@@ -9,14 +12,14 @@ transform = transforms.Compose([
 ])
 
 # 加載數據集
-dataset = ImageFolder(root="A1_dataset_path", transform=transform)
+dataset = ImageFolder(root="/Users/wenqingwei/Desktop/LSC/A1", transform=transform)
 train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
 
 # 初始化模型
 model = LeafSegmentationCNN()
 
 # 定義損失函數和優化器
-criterion = nn.CrossEntropyLoss()
+criterion = nn.CrossEntropyLoss() # type: ignore
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
 # 訓練模型
