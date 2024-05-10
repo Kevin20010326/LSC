@@ -28,15 +28,19 @@ class UNet(nn.Module):
         self.decoder3 = DoubleConv(128, 64)
         self.decoder4 = DoubleConv(64, out_channels)
         self.maxpool = nn.MaxPool2d(2)
-        self.upsample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
+        self.upsample1 = nn.ConvTranspose2d(512, 256, kernel_size=2, stride=2)
+        self.upsample2 = nn.ConvTranspose2d(256, 128, kernel_size=2, stride=2)
+        self.upsample3 = nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2)
+        self.upsample4 = nn.ConvTranspose2d(64, out_channels, kernel_size=2, stride=2)
 
     def forward(self, x):
         x1 = self.encoder1(x)
         x2 = self.encoder2(self.maxpool(x1))
         x3 = self.encoder3(self.maxpool(x2))
         x4 = self.encoder4(self.maxpool(x3))
-        x = self.decoder1(self.upsample(x4) + x3)
-        x = self.decoder2(self.upsample(x) + x2)
-        x = self.decoder3(self.upsample(x) + x1)
-        x = self.decoder4(self.upsample(x))
+        x = self.decoder1(torch.cat([self.upsample1(x4), x3], dim=1))
+        x = self.decoder2(torch.cat([self.upsample2(x), x2], dim=1))
+        x = self.decoder3(torch.cat([self.upsample3(x), x1], dim=1))
+        x = self.decoder4(self.upsample4(x))
         return x
+
