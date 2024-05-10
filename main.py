@@ -1,34 +1,35 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from dataset import LeafDataset
 from model import UNet
 
-# 定義資料轉換
+# 定义数据转换
 transform = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Grayscale(num_output_channels=1),  # 將RGB圖像轉換為單通道灰度圖像
+    transforms.Grayscale(num_output_channels=1),  # 将RGB图像转换为单通道灰度图像
     transforms.Normalize((0.5,), (0.5,))
 ])
 
-# 載入訓練和測試資料
+# 载入训练和测试数据
 train_dataset = LeafDataset(data_dir='/Users/wenqingwei/Desktop/LSC/A1_test', transform=transform)
 test_dataset = LeafDataset(data_dir='/Users/wenqingwei/Desktop/LSC/A1_test', transform=transform)
 
-# 定義資料載入器
+# 定义数据载入器
 train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=4, shuffle=False)
 
 # 初始化模型
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = UNet(in_channels=1, out_channels=1).to(device)  # 輸入和輸出通道數皆為1
+model = UNet(in_channels=1, out_channels=1).to(device)  # 输入和输出通道数均为1
 
-# 定義損失函數和優化器
+# 定义损失函数和优化器
 criterion = nn.BCEWithLogitsLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
-# 訓練模型
+# 训练模型
 num_epochs = 10
 for epoch in range(num_epochs):
     model.train()
@@ -47,7 +48,7 @@ for epoch in range(num_epochs):
     epoch_loss = running_loss / len(train_dataset)
     print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {epoch_loss:.4f}')
 
-# 評估模型
+# 评估模型
 model.eval()
 test_loss = 0.0
 with torch.no_grad():
