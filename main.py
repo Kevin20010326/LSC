@@ -12,8 +12,9 @@ transform = transforms.Compose([
 ])
 
 # 載入訓練和測試資料
-train_dataset = LeafDataset(data_dir='/Users/wenqingwei/Desktop/LSC/A1_test', transform=transform)
-test_dataset = LeafDataset(data_dir='/Users/wenqingwei/Desktop/LSC/A1_test', transform=transform)
+train_dataset = LeafDataset(data_dir='/Users/wenqingwei/Desktop/LSC/A1_test/A1', transform=transform)
+test_dataset = LeafDataset(data_dir='/Users/wenqingwei/Desktop/LSC/A1_test/A1', transform=transform)
+
 
 # 定義資料載入器
 train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
