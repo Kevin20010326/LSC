@@ -19,7 +19,7 @@ dataset = ImageFolder(root="/Users/wenqingwei/Desktop/LSC/A1_test", transform=tr
 num_classes = len(dataset.classes)
 
 # 初始化模型
-model = LeafSegmentationCNN()
+model = LeafSegmentationCNN(num_classes)
 
 # 創建訓練數據加載器
 train_loader = DataLoader(dataset, batch_size=8, shuffle=True)
@@ -28,12 +28,15 @@ train_loader = DataLoader(dataset, batch_size=8, shuffle=True)
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
-# 訓練模型
 for epoch in range(10):
-    for images, labels in train_loader:
+    for i, (images, labels) in enumerate(train_loader):
         optimizer.zero_grad()
         outputs = model(images)
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
+        
+        # 檢查每個 batch 的大小
+        print(f"Batch [{i + 1}], Size: {len(images)}")
+    
     print(f"Epoch [{epoch + 1}/10], Loss: {loss.item():.4f}")
