@@ -8,6 +8,7 @@ from model import UNet
 # 定義資料轉換
 transform = transforms.Compose([
     transforms.ToTensor(),
+    transforms.Grayscale(num_output_channels=1),  # 將RGB圖像轉換為單通道灰度圖像
     transforms.Normalize((0.5,), (0.5,))
 ])
 
@@ -22,7 +23,7 @@ test_loader = DataLoader(test_dataset, batch_size=4, shuffle=False)
 
 # 初始化模型
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = UNet(in_channels=1, out_channels=1).to(device)
+model = UNet(in_channels=1, out_channels=1).to(device)  # 輸入和輸出通道數皆為1
 
 # 定義損失函數和優化器
 criterion = nn.BCEWithLogitsLoss()
