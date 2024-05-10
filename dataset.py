@@ -7,7 +7,7 @@ class LeafDataset(Dataset):
         self.data_dir = data_dir
         self.transform = transform
         self.images_dir = os.path.join(data_dir, 'A1')
-        self.masks_dir = os.path.join(data_dir, 'masks')
+        self.masks_dir = os.path.join(data_dir, 'A1')
         self.image_files = [f for f in os.listdir(self.images_dir) if f.endswith('_rgb.png')]
 
     def __len__(self):
