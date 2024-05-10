@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 class DoubleConv(nn.Module):
     def __init__(self, in_channels, out_channels):
@@ -38,9 +39,12 @@ class UNet(nn.Module):
         x2 = self.encoder2(self.maxpool(x1))
         x3 = self.encoder3(self.maxpool(x2))
         x4 = self.encoder4(self.maxpool(x3))
+        
+        # 調整 x3 的尺寸，使其與 x4 的尺寸匹配
+        x3 = F.interpolate(x3, size=x4.size()[2:], mode='bilinear', align_corners=True)
+        
         x = self.decoder1(torch.cat([self.upsample1(x4), x3], dim=1))
         x = self.decoder2(torch.cat([self.upsample2(x), x2], dim=1))
         x = self.decoder3(torch.cat([self.upsample3(x), x1], dim=1))
         x = self.decoder4(self.upsample4(x))
         return x
-

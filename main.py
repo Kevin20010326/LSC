@@ -16,14 +16,9 @@ transform = transforms.Compose([
 train_dataset = LeafDataset(data_dir='/Users/wenqingwei/Desktop/LSC/A1_test', transform=transform)
 test_dataset = LeafDataset(data_dir='/Users/wenqingwei/Desktop/LSC/A1_test', transform=transform)
 
-
 # 定義資料載入器
 train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=4, shuffle=False)
-
-# 檢查轉換後的圖像的形狀
-sample_image, _ = next(iter(train_loader))
-print("Shape of transformed image:", sample_image.shape)
 
 # 初始化模型
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
