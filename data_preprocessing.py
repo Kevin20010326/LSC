@@ -10,7 +10,7 @@ class LeafSegmentationCNN(nn.Module):
         self.conv3 = nn.Conv2d(32, 64, 3, padding=1)
         # 定義全連接層
         self.fc1 = nn.Linear(64 * 16 * 16, 512)  # 將特徵圖展平後的大小為 64x16x16
-        self.fc2 = nn.Linear(512, 8)  # 輸出 2 類：前景和背景
+        self.fc2 = nn.Linear(512, 8)  # 修改為 8，以匹配標籤大小
 
     def forward(self, x):
         # 向前傳遞
@@ -24,3 +24,4 @@ class LeafSegmentationCNN(nn.Module):
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
         return x
+
