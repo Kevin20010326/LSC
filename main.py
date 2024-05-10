@@ -21,6 +21,10 @@ test_dataset = LeafDataset(data_dir='/Users/wenqingwei/Desktop/LSC/A1_test', tra
 train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=4, shuffle=False)
 
+# 檢查轉換後的圖像的形狀
+sample_image, _ = next(iter(train_loader))
+print("Shape of transformed image:", sample_image.shape)
+
 # 初始化模型
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = UNet(in_channels=1, out_channels=1).to(device)  # 輸入和輸出通道數皆為1
