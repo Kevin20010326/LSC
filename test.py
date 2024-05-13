@@ -3,10 +3,12 @@ import numpy as np
 import os
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras.preprocessing.image import img_to_array, array_to_img # type: ignore
+array = np.random.rand(100, 100)
+img = Image.fromarray(array)
+from tensorflow.keras.preprocessing.image import array_to_img
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Dropout, concatenate, Conv2DTranspose
+from keras.models import Model
+from keras.layers import Input, Conv2D, MaxPooling2D, Dropout, concatenate, Conv2DTranspose
 
 # 步驟 1：加載資料
 # 資料集路徑
@@ -18,16 +20,21 @@ def load_data(data_path):
     labels = []
     for filename in os.listdir(data_path):
         if filename.endswith("_rgb.png"):
-            # 加載圖像
+            # 加载图像
             image = Image.open(os.path.join(data_path, filename))
-            # 加載對應的標籤
+            # 加载对应的标签
             label_filename = filename.replace("_rgb.png", "_label.png")
             label = Image.open(os.path.join(data_path, label_filename))
+            # 转换为灰度图像，即单通道图像
+            label = label.convert('L')
             images.append(np.array(image))
             labels.append(np.array(label))
+            print("图像:", filename, "形状:", np.array(image).shape)
+            print("标签:", label_filename, "形状:", np.array(label).shape)
     return np.array(images), np.array(labels)
 
-# 加載資料
+# 加载数据
+data_path = "/Users/wenqingwei/Desktop/LSC/A1_test/A1"
 images, labels = load_data(data_path)
 
 print("圖像數量:", len(images))
@@ -38,21 +45,22 @@ print("第一张标签维度:", labels[0].shape)
 
 
 # 步驟 2：資料預處理
-def preprocess_data(images, labels):
-    # 將圖像和標籤調整為模型所需的大小（256x256）
-    image_size = (256, 256)
-    images_resized = [array_to_img(img, scale=False).resize(image_size) for img in images]
-    labels_resized = [array_to_img(label, scale=False).resize(image_size) for label in labels]
+def preprocess_data(images, labels, image_size):
+    # Preprocess images
+    images_resized = [Image.fromarray(image).resize(image_size) for image in images]
+    images_resized = [np.array(image) for image in images_resized]
 
-    # 正規化處理
-    X = np.array([img_to_array(img) / 255.0 for img in images_resized])
-    y = np.array([img_to_array(label) / 255.0 for label in labels_resized])
+    # Preprocess labels
+    labels_resized = [np.expand_dims(label, axis=-1) for label in labels]
 
-    # 分割資料集為訓練集和測試集
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # Convert labels to images
+    labels_images = [array_to_img(label, scale=False) for label in labels_resized]
 
-    return X_train, X_test, y_train, y_test
-X_train, X_test, y_train, y_test = preprocess_data(images, labels)
+    return images_resized, labels_images
+
+# Example usage
+image_size = (224, 224)
+X_train, X_test, y_train, y_test = preprocess_data(images, labels, image_size)
 print("训练集图像形状:", X_train.shape)
 print("测试集图像形状:", X_test.shape)
 
@@ -126,26 +134,14 @@ def evaluate_model(model, X_test, y_test):
 
 # 主函數
 def main():
-    # 資料集路徑
-    data_path = "/Users/wenqingwei/Desktop/LSC/A1_test/A1"
+    # 加载数据
+    data_path = "/Users/wenqingwei/Desktop/LSC/A1_test"
 
-    # 步驟 1：加載資料
     images, labels = load_data(data_path)
-    print("圖像數量:", len(images))
-    print("標籤數量:", len(labels))
+    print("图像数量:", len(images))
+    print("标签数量:", len(labels))
+    print("第一张图像维度:", images[0].shape)
+    print("第一张标签维度:", labels[0].shape)
 
-    # 步驟 2：資料預處理
-    X_train, X_test, y_train, y_test = preprocess_data(images, labels)
-    print("訓練集圖像形狀:", X_train.shape)
-    print("測試集圖像形狀:", X_test.shape)
-
-    # 步驟 3：建立和訓練模型
-    input_shape = (256, 256, 3)  # 圖像尺寸為 256x256，3通道（RGB）
-    model = unet_model(input_shape)
-    train_model(model, X_train, y_train, X_test, y_test)
-
-    # 步驟 4：評估模型
-    evaluate_model(model, X_test, y_test)
-
-if __name__ == "__main__":
-    main()
+    # 数据预处理
+    X_train, X_test, y_train, y_test = preprocess_data
