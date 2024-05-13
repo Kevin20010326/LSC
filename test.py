@@ -3,9 +3,7 @@ import numpy as np
 import os
 import tensorflow as tf
 from tensorflow import keras
-array = np.random.rand(100, 100)
-img = Image.fromarray(array)
-from tensorflow.keras.preprocessing.image import array_to_img
+from keras_preprocessing.image import  array_to_img
 from sklearn.model_selection import train_test_split
 from keras.models import Model
 from keras.layers import Input, Conv2D, MaxPooling2D, Dropout, concatenate, Conv2DTranspose
@@ -60,9 +58,9 @@ def preprocess_data(images, labels, image_size):
 
 # Example usage
 image_size = (224, 224)
-X_train, X_test, y_train, y_test = preprocess_data(images, labels, image_size)
-print("训练集图像形状:", X_train.shape)
-print("测试集图像形状:", X_test.shape)
+X_train, X_test  = preprocess_data(images, labels, image_size)
+print("训练集图像形状:", len(X_train))
+print("测试集图像形状:", len(X_test))
 
 # 步驟 3：建立和訓練模型
 def unet_model(input_shape):
